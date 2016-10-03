@@ -54,11 +54,11 @@ wql({
 });
 ```
 output
-
-#### OR
 ```
 (foo1 = 1 AND bar1 = "a") AND (foo2 = 2 AND bar2 = "b")
 ```
+
+#### OR
 ```js
 wql({
   $or: [
