@@ -120,7 +120,7 @@ function _convertToString(name, obj) {
 }
 
 /**
- * Build Open Access filter using syntax from MongoDB
+ * Build a WQL where clause using syntax from MongoDB
  * @param {Object} query
  * @returns {String} the serialized query
  */
