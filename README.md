@@ -30,7 +30,6 @@ wql({
 output
 ```
 propString = "str" AND propLike like "%foo%" AND propNumber > 1 AND propBool = true
-
 ```
 
 
@@ -43,7 +42,6 @@ wql({
 output
 ```
 (foo = 1 OR foo = 2 OR foo = 5 OR foo = 10)
-
 ```
 
 #### AND
@@ -60,7 +58,6 @@ output
 #### OR
 ```
 (foo1 = 1 AND bar1 = "a") AND (foo2 = 2 AND bar2 = "b")
-
 ```
 ```js
 wql({
@@ -73,15 +70,10 @@ wql({
 output
 ```
 (foo1 = 1 AND bar1 = "a") OR (foo2 = 2 AND bar2 = "b")
-
 ```
 
 
 #### Nested queries
-```
-(foo1 = 1 AND bar1 = "a") AND (foo2 = 2 AND bar2 = "b")
-
-```
 ```js
 wql({
   $and: [
@@ -98,7 +90,6 @@ wql({
 output
 ```
 (foo1 = 1 AND bar1 = "a") AND ((a = 1 AND c = 1) OR (b = 2 AND c = 1))
-
 ```
 
 
