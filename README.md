@@ -33,7 +33,7 @@ propString = "str" AND propLike like "%foo%" AND propNumber > 1 AND propBool = t
 ```
 
 
-#### Arrays
+#### Arrays (in)
 ```js
 wql({
   foo: { $in: [1, 2, 5, 10] },
@@ -42,6 +42,17 @@ wql({
 output
 ```
 (foo = 1 OR foo = 2 OR foo = 5 OR foo = 10)
+```
+
+#### Arrays (not in)
+```js
+wql({
+  foo: { $nin: [1, 2, 5, 10] },
+});
+```
+output
+```
+(foo != 1 AND foo != 2 AND foo != 5 AND foo != 10)
 ```
 
 #### AND
@@ -101,6 +112,7 @@ output
 - `$gt`
 - `$lt`
 - `$in`
+- `$nin`
 - `$like`
 - `$startsWith`
 

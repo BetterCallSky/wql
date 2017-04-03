@@ -64,13 +64,24 @@ describe('common/build-filter', () => {
       expect(() => buildFilter({ foo: { $in: [] } })).to.throw(err);
     });
 
+    it('should throw if values in $nin are not an array', () => {
+      const err = 'Values for $nin must be an array';
+      expect(() => buildFilter({ foo: { $nin: 'foo' } })).to.throw(err);
+    });
+
+    it('should throw if values in $nin are empty', () => {
+      const err = 'Values for $nin must contain at least 1 element';
+      expect(() => buildFilter({ foo: { $nin: [] } })).to.throw(err);
+    });
+
     it('should throw if $in, $ne, $eq, $like are not the only statements', () => {
-      const err = '$in, $ne, $eq, $like, $startsWith must be the only statement';
+      const err = '$nin, $in, $ne, $eq, $like, $startsWith must be the only statement';
       expect(() => buildFilter({ bar: { $ne: 1, $gt: 2 } })).to.throw(err);
       expect(() => buildFilter({ bar: { $eq: 1, $gt: 2 } })).to.throw(err);
       expect(() => buildFilter({ bar: { $like: '1', $gt: 2 } })).to.throw(err);
       expect(() => buildFilter({ bar: { $like: '1', $startsWith: '2' } })).to.throw(err);
       expect(() => buildFilter({ bar: { $in: '1', $gt: 2 } })).to.throw(err);
+      expect(() => buildFilter({ bar: { $in: '1', $nin: 2 } })).to.throw(err);
     });
   });
 
@@ -149,6 +160,11 @@ describe('common/build-filter', () => {
     it('should build a $in query', () => {
       const filter = buildFilter({ foo: { $in: [1, 2, 3] } });
       expect(filter).to.equal('(foo = 1 OR foo = 2 OR foo = 3)');
+    });
+
+    it('should build a $nin query', () => {
+      const filter = buildFilter({ foo: { $nin: [1, 2, 3] } });
+      expect(filter).to.equal('(foo != 1 AND foo != 2 AND foo != 3)');
     });
 
     it('should build a complex query', () => {

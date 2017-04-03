@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const _operators = ['$in', '$like', '$startsWith', '$ne', '$eq', '$gte', '$lte', '$gt', '$lt'];
+const _operators = ['$nin', '$in', '$like', '$startsWith', '$ne', '$eq', '$gte', '$lte', '$gt', '$lt'];
 const _simpleOperators = {
   $ne: '!=',
   $eq: '=',
@@ -66,7 +66,7 @@ function _convertToString(name, obj) {
     }
   });
 
-  const operators = ['$in', '$ne', '$eq', '$like', '$startsWith'];
+  const operators = ['$nin', '$in', '$ne', '$eq', '$like', '$startsWith'];
   if (keys.length > 1 && _.some(operators, (op) => _.has(obj, op))) {
     throw new Error(`${operators.join(', ')} must be the only statement`);
   }
@@ -80,6 +80,17 @@ function _convertToString(name, obj) {
     }
     const conditions = _.map(values, (value) => `${name} = ${_serializeValue(value)}`);
     return _joinConditions(conditions, 'OR');
+  }
+  if (_.has(obj, '$nin')) {
+    const values = obj.$nin;
+    if (!_.isArray(values)) {
+      throw new Error('Values for $nin must be an array');
+    }
+    if (!values.length) {
+      throw new Error('Values for $nin must contain at least 1 element');
+    }
+    const conditions = _.map(values, (value) => `${name} != ${_serializeValue(value)}`);
+    return _joinConditions(conditions, 'AND');
   }
   if (_.has(obj, '$like')) {
     const like = obj.$like;
