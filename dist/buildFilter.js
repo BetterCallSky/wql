@@ -11,7 +11,7 @@ var _lodash2 = _interopRequireDefault(_lodash);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _operators = ['$in', '$like', '$ne', '$eq', '$gte', '$lte', '$gt', '$lt'];
+var _operators = ['$in', '$like', '$startsWith', '$ne', '$eq', '$gte', '$lte', '$gt', '$lt'];
 var _simpleOperators = {
   $ne: '!=',
   $eq: '=',
@@ -77,8 +77,11 @@ function _convertToString(name, obj) {
     }
   });
 
-  if (keys.length > 1 && (_lodash2.default.has(obj, '$ne') || _lodash2.default.has(obj, '$eq') || _lodash2.default.has(obj, '$like') || _lodash2.default.has(obj, '$in'))) {
-    throw new Error('$in, $ne, $eq, $like must be the only statement');
+  var operators = ['$in', '$ne', '$eq', '$like', '$startsWith'];
+  if (keys.length > 1 && _lodash2.default.some(operators, function (op) {
+    return _lodash2.default.has(obj, op);
+  })) {
+    throw new Error(operators.join(', ') + ' must be the only statement');
   }
   if (_lodash2.default.has(obj, '$in')) {
     var values = obj.$in;
@@ -102,6 +105,16 @@ function _convertToString(name, obj) {
       throw new Error('value for $like cannot be null or empty');
     }
     return name + ' like "%' + like + '%"';
+  }
+  if (_lodash2.default.has(obj, '$startsWith')) {
+    var _like = obj.$startsWith;
+    if (!_lodash2.default.isString(_like)) {
+      throw new Error('Value for $startsWith must be a string');
+    }
+    if (!_like) {
+      throw new Error('value for $startsWith cannot be null or empty');
+    }
+    return name + ' like "' + _like + '%"';
   }
   if (_lodash2.default.has(obj, '$ne')) {
     return name + ' != ' + _serializeValue(obj.$ne);
