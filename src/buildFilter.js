@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const _operators = ['$in', '$like', '$ne', '$eq', '$gte', '$lte', '$gt', '$lt'];
+const _operators = ['$in', '$like', '$startsWith', '$ne', '$eq', '$gte', '$lte', '$gt', '$lt'];
 const _simpleOperators = {
   $ne: '!=',
   $eq: '=',
@@ -66,8 +66,9 @@ function _convertToString(name, obj) {
     }
   });
 
-  if (keys.length > 1 && (_.has(obj, '$ne') || _.has(obj, '$eq') || _.has(obj, '$like') || _.has(obj, '$in'))) {
-    throw new Error('$in, $ne, $eq, $like must be the only statement');
+  const operators = ['$in', '$ne', '$eq', '$like', '$startsWith'];
+  if (keys.length > 1 && _.some(operators, (op) => _.has(obj, op))) {
+    throw new Error(`${operators.join(', ')} must be the only statement`);
   }
   if (_.has(obj, '$in')) {
     const values = obj.$in;
@@ -89,6 +90,16 @@ function _convertToString(name, obj) {
       throw new Error('value for $like cannot be null or empty');
     }
     return `${name} like "%${like}%"`;
+  }
+  if (_.has(obj, '$startsWith')) {
+    const like = obj.$startsWith;
+    if (!_.isString(like)) {
+      throw new Error('Value for $startsWith must be a string');
+    }
+    if (!like) {
+      throw new Error('value for $startsWith cannot be null or empty');
+    }
+    return `${name} like "${like}%"`;
   }
   if (_.has(obj, '$ne')) {
     return `${name} != ${_serializeValue(obj.$ne)}`;

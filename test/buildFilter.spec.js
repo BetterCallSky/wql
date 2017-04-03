@@ -21,6 +21,14 @@ describe('common/build-filter', () => {
       expect(() => buildFilter({ foo: { $like: '' } })).to.throw('value for $like cannot be null or empty');
     });
 
+    it('should throw if $startsWith is not a string', () => {
+      expect(() => buildFilter({ foo: { $startsWith: 1 } })).to.throw('Value for $startsWith must be a string');
+    });
+
+    it('should throw if $startsWith is empty', () => {
+      expect(() => buildFilter({ foo: { $startsWith: '' } })).to.throw('value for $startsWith cannot be null or empty');
+    });
+
     it('should throw if empty operator', () => {
       expect(() => buildFilter({ foo: { } })).to.throw('Must define an operator');
     });
@@ -57,10 +65,11 @@ describe('common/build-filter', () => {
     });
 
     it('should throw if $in, $ne, $eq, $like are not the only statements', () => {
-      const err = '$in, $ne, $eq, $like must be the only statement';
+      const err = '$in, $ne, $eq, $like, $startsWith must be the only statement';
       expect(() => buildFilter({ bar: { $ne: 1, $gt: 2 } })).to.throw(err);
       expect(() => buildFilter({ bar: { $eq: 1, $gt: 2 } })).to.throw(err);
       expect(() => buildFilter({ bar: { $like: '1', $gt: 2 } })).to.throw(err);
+      expect(() => buildFilter({ bar: { $like: '1', $startsWith: '2' } })).to.throw(err);
       expect(() => buildFilter({ bar: { $in: '1', $gt: 2 } })).to.throw(err);
     });
   });
@@ -95,6 +104,11 @@ describe('common/build-filter', () => {
     it('should build a $like query', () => {
       const filter = buildFilter({ foo: { $like: 'bar' } });
       expect(filter).to.equal('foo like "%bar%"');
+    });
+
+    it('should build a $startsWith query', () => {
+      const filter = buildFilter({ foo: { $startsWith: 'bar' } });
+      expect(filter).to.equal('foo like "bar%"');
     });
 
     it('should build a $ne query', () => {

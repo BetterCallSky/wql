@@ -102,6 +102,7 @@ output
 - `$lt`
 - `$in`
 - `$like`
+- `$startsWith`
 
 MIT License
 
