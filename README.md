@@ -1,6 +1,6 @@
 # wql
 [![Build Status](https://travis-ci.org/lsentkiewicz/wql.svg?branch=master)](https://travis-ci.org/lsentkiewicz/wql)
-[![codecov](https://codecov.io/gh/lsentkiewicz/wql/branch/master/graph/badge.svg)](https://codecov.io/gh/lsentkiewicz/wql)
+[![codecov](https://codecov.io/gh/lsentkiewicz/wql/branch/master/graph/badge.svg)](https://codecov.io/gh/lsentkiewicz/wql) [![Greenkeeper badge](https://badges.greenkeeper.io/BetterCallSky/wql.svg)](https://greenkeeper.io/)
 
 wql is a WHERE clause generator for [WQL](https://msdn.microsoft.com/en-us/library/aa394606(v=vs.85).aspx) queries using MongoDB syntax.  
 
